@@ -39,7 +39,7 @@ CREATE TABLE `sign_up` (
 
 LOCK TABLES `sign_up` WRITE;
 /*!40000 ALTER TABLE `sign_up` DISABLE KEYS */;
-INSERT INTO `sign_up` VALUES ('divyansh01@gmail.com','Divya23','DivyaTiwari'),('hemant56@gmail.com','Hemant329','Hemant123'),('kumar1166@gmail.com','kris6','Krishna1'),('parth529@gmail.com','Parth2839','Parth@456'),('quizo_admin@gmail.com','ExamPortalTeam','Admin');
+INSERT INTO `sign_up` VALUES ('mridhulgupta712@gmail.com','Mridhul721','mridhulgupta'),('demo1@gmail.com','demo1','Demouser'),('kumar1166@gmail.com','kris6','Krishna1'),('parth529@gmail.com','Parth2839','Parth@456'),('quizo_admin@gmail.com','ExamPortalTeam','Admin');
 /*!40000 ALTER TABLE `sign_up` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
