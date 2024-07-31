@@ -8,7 +8,7 @@ Download
 
 2. **shape_predictor_68_face_landmarks.dat**
 
-   Download from [shape_predictor_68_face_landmarks.dat GitHub link](https://github.com/italojs/facial-landmarks-recognition/blob/master/shape_predictor_68_face_landmarks.dat) and save it in:  "shape_predictor_model\shape_predictor_68_face_landmarks.dat"
+   Download from [shape_predictor_68_face_landmarks.dat GitHub link](https://github.com/italojs/facial-landmarks-recognition/blob/master/shape_predictor_68_face_landmarks.dat) and save it in: "shape_predictor_model\shape_predictor_68_face_landmarks.dat"
 
 ### Prerequisites
 To run the programs in this repo, do the following:
