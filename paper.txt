@@ -1,0 +1,41 @@
+Question One: Which of the following is true for variable names in Python?
+
+Underscore and ampersand are the only two special characters allowed
+Unlimited length
+All private members must have leading and trailing underscores
+None of the mentioned
+
+Question two: Which of the following is not a type of database?
+
+Hierarchical
+Network
+Distributed
+Decentralized
+
+Question three: Suppose you know Selection sort, Insertion sort, and Quick sort. Which one will you use for the best time complexity?
+
+Selection sort
+Insertion sort
+Quick sort
+All of the above
+
+Question four: Which of the following is known as a set of entities of the same type that share the same properties or attributes?
+
+Relation set
+Tuples
+Entity set
+Entity Relation model
+
+Question five: Which command is used to remove a relation from SQL?
+
+Drop table
+Delete
+Purge
+Remove
+
+Question six: Please, rate this portal!
+
+Good
+Need some improvement
+Not good
+None
