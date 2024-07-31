@@ -1,6 +1,6 @@
+cmake
 opencv-python
 dlib
 Pyaudio
-Winsound
 flask
 mysql-connector-python
