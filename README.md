@@ -42,7 +42,6 @@ python server.py
 3. OpenCV
 4. Dlib
 5. Pyaudio
-6. Winsound
-7. Web Skills (HTML, CSS, JS)
-8. Flask Server
-9. SQL Database
+6. Web Skills (HTML, CSS, JS)
+7. Flask Server
+8. SQL Database
