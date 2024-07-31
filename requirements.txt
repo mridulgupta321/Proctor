@@ -4,3 +4,4 @@ dlib
 Pyaudio
 flask
 mysql-connector-python
+imutils
