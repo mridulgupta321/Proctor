@@ -1,8 +1,5 @@
 AI Based Online Exam Proctoring System
 
-
-
-
 Folders :- 
 1. backend                 - File Interacting with SQL server
 2. object_detection_model  - Object Detection downloaded YOLO model 

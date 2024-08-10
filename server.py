@@ -2,6 +2,8 @@ from flask import Flask, render_template, Response, request, jsonify
 from flask_cors import CORS
 from backend.db_helper import *
 from main import *
+from audio_detection import process_audio_and_text
+from capture import *
 import os
 import sys
 
@@ -9,7 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 """
-Code for the database backend server. 
+Code for the database backend server.
 """
 #Receiving the sign_up data credientals 
 @app.route('/signup_data', methods=['POST'])
@@ -34,6 +36,15 @@ def login_data():
         return jsonify(response_data)   
     return jsonify(response_data = {'message': 'Data not found!'})
 
+@app.route('/image_in_pdf', methods=['POST'])
+def image_in_pdf_route():
+    try:
+        image_in_pdf()  # Call the function that handles image to PDF conversion
+        return jsonify({'status': 'success', 'message': 'PDF created successfully'})
+    except Exception as e:
+        print(f'Error: {e}')
+        return jsonify({'status': 'error', 'message': 'Failed to create PDF'})
+
 
 #Router to render the index HTML template
 @app.route('/')
@@ -52,6 +63,10 @@ def quix_page():
 def video_feed():
     return Response(proctoringAlgo(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/process_audio_and_text', methods=['POST'])
+def process_audio():
+    process_audio_and_text()  # Call the function from your Python file
+    return jsonify({'status': 'success', 'message': 'Audio and text processing started.'})
 
 #Router to stop the camera and flask server
 @app.route('/stop_camera')
@@ -62,7 +77,6 @@ def stop_camera():
     print('Camera and Server stopping.....')
     os._exit(0) 
     return 
-
 
 #main function
 if __name__ == "__main__":

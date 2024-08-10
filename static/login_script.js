@@ -59,13 +59,13 @@ createacctbtn.addEventListener("click", function(){
     }
 });
 
-submitButton.addEventListener("click", function(){
+submitButton.addEventListener("click", function() {
     var isVerified = true;
     email = emailInput.value;
     password = passwordInput.value;
 
-    if (!email || !password){
-        window.alert("Please fill put all required fields.")
+    if (!email || !password) {
+        window.alert("Please fill out all required fields.");
         isVerified = false;
     }
 
@@ -74,28 +74,45 @@ submitButton.addEventListener("click", function(){
         password: password
     }
 
-    if (isVerified){
+    if (isVerified) {
         var url = 'http://127.0.0.1:5000/login_data';
         fetch(url, {
-            method: 'POST', // or 'PUT'
-            headers:{
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data) // data can be `string` or {object}!
+            body: JSON.stringify(data)
         })
         .then(res => res.json())
         .then(data => {
-            if (data == true){
-                console.log('Done, Login Credentials matched.');
-                window.location.replace("./quiz_html");
+            if (data.message !== 'Data not found!') {
+                console.log('Login successful.');
+                // Call the endpoint to run image_in_pdf
+                runImageInPDF();
+            } else {
+                window.alert("Login credentials don't match our database.");
             }
-            else{
-                window.alert("Login credentials doesn't with our database.")
-            }
-    })
+        })
         .catch(error => console.error('Error:', error));
     }
 });
+
+function runImageInPDF() {
+    fetch('http://127.0.0.1:5000/image_in_pdf', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.alert('PDF created successfully');
+            window.location.replace("./quiz_html"); // Redirect after success
+        } else {
+            window.alert('Failed to create PDF');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 
 // resetting a password
 // forgetBtn.addEventListener("click", function(){

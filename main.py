@@ -1,5 +1,5 @@
 import cv2
-# import imutils
+import imutils
 import time
 import winsound
 from facial_detections import detectFace
@@ -10,29 +10,26 @@ from eye_tracker import gazeDetection
 from head_pose_estimation import head_pose_detection
 from datetime import datetime
 
-
-global data_record
 data_record = []
 
 running = True
 
-
-#For Beeping
+# For Beeping
 frequency = 2500
 duration = 1000
 
-#OpenCV videocapture for the webcam
+# OpenCV videocapture for the webcam
 cam = cv2.VideoCapture(0)
 
-#If camera is already opened
-if (cam.isOpened() == False):
+# If camera is not opened, try to open it
+if not cam.isOpened():
     cam.open()
 
-#Face Count If-else conditions
+# Face Count If-else conditions
 def faceCount_detection(faceCount):
     if faceCount > 1:
         time.sleep(5)
-        remark = "Multiple faces has been detected."
+        remark = "Multiple faces have been detected."
         winsound.Beep(frequency, duration)
     elif faceCount == 0:
         remark = "No face has been detected."
@@ -42,32 +39,32 @@ def faceCount_detection(faceCount):
         remark = "Face detecting properly."
     return remark
 
-
-#Main function 
+# Main function
 def proctoringAlgo():
-
     blinkCount = 0
 
     while running:
         ret, frame = cam.read()
-        # frame = imutils.resize(frame, width=450)
+        if not ret:
+            print("Failed to grab frame")
+            break
 
+        frame = imutils.resize(frame, width=450)
         record = []
 
-        #Reading the current time
+        # Reading the current time
         current_time = datetime.now().strftime("%H:%M:%S.%f")
         print("Current time is:", current_time)
         record.append(current_time)
 
-        #Returns the face count and will detect the face.
+        # Detect faces and count them
         faceCount, faces = detectFace(frame)
-        print(faceCount_detection(faceCount))
-        record.append(faceCount_detection(faceCount))
-        # print(faceCount)
+        remark = faceCount_detection(faceCount)
+        print(remark)
+        record.append(remark)
 
         if faceCount == 1:
-
-            #Blink Detection
+            # Blink Detection
             blinkStatus = isBlinking(faces, frame)
             print(blinkStatus[2])
 
@@ -77,16 +74,15 @@ def proctoringAlgo():
             else:
                 record.append(blinkStatus[2])
 
-
             # Gaze Detection
-            eyeStatus = (gazeDetection(faces, frame))
+            eyeStatus = gazeDetection(faces, frame)
             print(eyeStatus)
             record.append(eyeStatus)
 
             # Mouth Position Detection
-            print(mouthTrack(faces, frame))
-            record.append(mouthTrack(faces, frame))
-            # mouthTrack(faces, frame)
+            mouth_status = mouthTrack(faces, frame)
+            print(mouth_status)
+            record.append(mouth_status)
 
             # Object detection using YOLO
             objectName = detectObject(frame)
@@ -99,41 +95,81 @@ def proctoringAlgo():
                 continue
 
             # Head Pose estimation
-            print(head_pose_detection(faces, frame))
-            record.append(head_pose_detection(faces, frame))
-
+            head_pose_status = head_pose_detection(faces, frame)
+            print(head_pose_status)
+            record.append(head_pose_status)
         
-        else:
-            data_record.append(record)
-            continue
-
         data_record.append(record)
 
-
-        # eyeStatus = gazeDetection(faces, frame)
-        # print(eyeStatus)
-        # print(objectName) 
-
-
-        #Convert the frame to JPEG format
+        # Convert the frame to JPEG format for streaming
         _, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
     
         yield (b'--frame\r\n'
-           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
     cam.release()
     cv2.destroyAllWindows()
+from fpdf import FPDF
+from PyPDF2 import PdfReader, PdfWriter
 
-
-
-def main_app():
-
-    # print(data_record)
+def create_pdf_with_data(data_record):
     # Convert the list to a string with each element on a new line
     activityVal = "\n".join(map(str, data_record))
-    # print(activityVal)
 
-    with open('activity.txt', 'w') as file:
-        file.write(str(activityVal))
+    # Create instance of FPDF class
+    pdf = FPDF()
+    pdf.add_page()
+    
+    # Set font
+    pdf.set_font("Arial", size = 12)
+    
+    # Add a cell
+    pdf.cell(200, 10, txt = "Proctoring Data", ln = True, align = 'C')
+    
+    # Add a line break
+    pdf.ln(10)
+    
+    # Add the activity data
+    pdf.multi_cell(0, 10, activityVal)
+    
+    # Save the pdf to a temporary file
+    temp_pdf = "temp_output.pdf"
+    pdf.output(temp_pdf)
+    return temp_pdf
+
+def append_to_pdf(existing_pdf, new_pdf):
+    pdf_writer = PdfWriter()
+
+    # Read the existing PDF
+    pdf_reader = PdfReader(existing_pdf)
+    for page in pdf_reader.pages:
+        pdf_writer.add_page(page)
+
+    # Read the new PDF
+    new_pdf_reader = PdfReader(new_pdf)
+    for page in new_pdf_reader.pages:
+        pdf_writer.add_page(page)
+    
+    # Write the updated PDF
+    with open(existing_pdf, "wb") as f:
+        pdf_writer.write(f)
+
+def main_app():
+    print(data_record)
+    
+    # Create a new temporary PDF with the latest data
+    temp_pdf = create_pdf_with_data(data_record)
+
+    # Check if the output.pdf exists
+    output_pdf = "output.pdf"
+    try:
+        # Append the new content to the existing PDF
+        append_to_pdf(output_pdf, temp_pdf)
+    except FileNotFoundError:
+        # If output.pdf does not exist, rename the temp PDF to output.pdf
+        import shutil
+        shutil.move(temp_pdf, output_pdf)
+
+if __name__ == "__main__":
+    main_app()

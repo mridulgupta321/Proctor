@@ -7,22 +7,22 @@ from mouth_tracking import mouthTrack
 from object_detection import detectObject
 from audio_detection import process_audio_and_text
 
-cam = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 
 while True:
-    ret, frame = cam.read()
+    ret, frame = cap.read()
 
     # FUNCTION 1
     faceCount, faces = detectFace(frame)
-    # print(faceCount)
+    print(faceCount)
 
     # FUNCTION 2
     eyeStatus = gazeDetection(faces, frame)
-    # print(eyeStatus)
+    print(eyeStatus)
 
     # FUNCTION 3
     blinkStatus = isBlinking(faces, frame)
-    # print(blinkStatus[2])
+    print(blinkStatus[2])
 
     # FUNCTION 4
     head_pose_detection(faces, frame)
@@ -34,7 +34,7 @@ while True:
     print(detectObject(frame))
 
     # FUNCTION 7
-    #process_audio_and_text ()
+    process_audio_and_text()
 
 
 
@@ -43,5 +43,5 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-cam.release()
+cap.release()
 cv2.destroyAllWindows()

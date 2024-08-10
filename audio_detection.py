@@ -86,7 +86,7 @@ def compare_texts(paper_path, final_path):
 
 def process_audio_and_text():
     flag = False
-    for i in range(90 // 15):  # Number of total seconds to record / Number of seconds per recording
+    for i in range(30 // 10):  # Number of total seconds to record / Number of seconds per recording
         t1 = threading.Thread(target=save_audios, args=[i]) 
         x = i - 1
         t2 = threading.Thread(target=convert, args=[x])  # send one earlier than being recorded
@@ -101,3 +101,5 @@ def process_audio_and_text():
     p.terminate()
     remove_stop_words("test.txt")
     compare_texts("paper.txt", "final.txt")
+
+# process_audio_and_text()
