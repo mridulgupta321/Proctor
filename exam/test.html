@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violation Scale</title>
+    <style>
+
+    </style>
+    <script>
+        function updateViolationLevel(parameterId, value) {
+            const fillElement = document.getElementById(parameterId).querySelector('.fill');
+            const valueElement = document.getElementById(parameterId).querySelector('.parameter-value');
+            
+            fillElement.style.height = value + '%';
+            valueElement.textContent = (value / 100).toFixed(2);
+        }
+
+        // Example: Update specific parameter violation level
+        // You can call this function with the ID of the parameter and the new violation level percentage
+        // updateViolationLevel('parameter1', 40); // This would update the first parameter to 40%
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Violation Scale</h1>
+        <p>
+            It is an index designed to rate a candidate on fair and ethical attempt of an online assessment. 
+            This score is derived using <strong>EYE IN THE SKY™</strong>, proprietary malpractice detection technology, and also reports the window violations attempted by a candidate and total time spent by moving outside the test on a system or browser.
+        </p>
+        <div class="scale">
+            <div class="scale-bar">
+                <div class="indicator" style="left: 10%;"></div>
+            </div>
+            <span>0.3</span>
+        </div>
+        <div class="scale-labels">
+            <span>0</span>
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>Unacceptable</span>
+        </div>
+        <p class="violation-time">Violation Window: 0 | Time: 00 min</p>
+        <div class="parameters">
+            <div class="parameter" id="parameter1">
+                <div class="parameter-bar">
+                    <div class="fill" style="height: 0%;"></div>
+                </div>
+                <div class="parameter-label">Window Switch</div>
+                <div class="parameter-value">0.00</div>
+            </div>
+            <div class="parameter" id="parameter2">
+                <div class="parameter-bar">
+                    <div class="fill" style="height: 0%;"></div>
+                </div>
+                <div class="parameter-label">Multiple Face Detection</div>
+                <div class="parameter-value">0.00</div>
+            </div>
+            <div class="parameter" id="parameter3">
+                <div class="parameter-bar">
+                    <div class="fill" style="height: 0%;"></div>
+                </div>
+                <div class="parameter-label">Multiple Login</div>
+                <div class="parameter-value">0.00</div>
+            </div>
+            <div class="parameter" id="parameter4">
+                <div class="parameter-bar">
+                    <div class="fill" style="height: 0%;"></div>
+                </div>
+                <div class="parameter-label">Device</div>
+                <div class="parameter-value">0.00</div>
+            </div>
+            <div class="parameter" id="parameter5">
+                <div class="parameter-bar">
+                    <div class="fill" style="height: 0%;"></div>
+                </div>
+                <div class="parameter-label">Answer Behavior</div>
+                <div class="parameter-value">0.00</div>
+            </div>
+            <div class="parameter" id="parameter6">
+                <div class="parameter-bar">
+                    <div class="fill" style="height: 0%;"></div>
+                </div>      
+                <div class="parameter-label">Object Detection</div>
+                <div class="parameter-value">0.00</div> 
+            </div>
+            <div class="parameter" id="parameter7">
+                <div class="parameter-bar">
+                    <div class="fill" style="height: 40%; background-color: #007300;"></div>
+                </div>
+                <div class="parameter-label">Face Recognition</div>
+                <div class="parameter-value">0.40</div>
+            </div>
+        </div>
+        <div class="violation-info">
+            <strong>Low (0 - 1)</strong>
+            <p>
+                A low violation rating indicates the likelihood that the candidate has attempted the assessment fairly without indulging in any malpractice. A malpractice would include incidences such as window switch, impersonation during the course of assessment, use of other devices, multiple logins, abrupt answering behavior, and seeking the help of another individual during the assessment.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

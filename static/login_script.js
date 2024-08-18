@@ -4,21 +4,24 @@ const signupButton = document.getElementById("sign-up");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 
-const main = document.getElementById("main");
-const createacc = document.getElementById("create-acct");
 const signupEmailIn = document.getElementById("email-signup");
 const usernameIn = document.getElementById("username-signup");
 const signupPasswordIn = document.getElementById("password-signup");
 const confirmSignUpPasswordIn = document.getElementById("confirm-password-signup");
+const dobIn = document.getElementById("dob-signup");
+const genderIn = document.getElementById("gender-signup");
+const mobileIn = document.getElementById("mobile-signup");
 const createacctbtn = document.getElementById("create-acct-btn");
-const forgetBtn = document.querySelector(".forget-btn")
 
 var email,
     password,
     signupEmail,
     username,
     signupPassword,
-    confirmSignUpPassword;
+    confirmSignUpPassword,
+    dob,
+    gender,
+    mobile;
 
 createacctbtn.addEventListener("click", function(){
     var isVerified = true;
@@ -26,36 +29,53 @@ createacctbtn.addEventListener("click", function(){
     signupEmail = signupEmailIn.value;
     signupPassword = signupPasswordIn.value;
     confirmSignUpPassword = confirmSignUpPasswordIn.value;
+    username = usernameIn.value;
+    dob = dobIn.value;
+    gender = genderIn.value;
+    mobile = mobileIn.value;
 
     if (signupPassword != confirmSignUpPassword){
         window.alert("Password fields do not match. Try again.");
         isVerified = false;
     }
 
-    username = usernameIn.value;
-    if (!signupEmail || !signupPassword || !confirmSignUpPassword){
-        window.alert("Please fill put all required fields.");
+    if (!signupEmail || !signupPassword || !confirmSignUpPassword || !dob || !gender || !mobile){
+        window.alert("Please fill out all required fields.");
         isVerified = false;
     }
 
+    const usernameIn = document.getElementById("username-signup");
+
+    // Include username in the data sent to the server
     const data = {
-        signupEmail: signupEmail,
-        username: username,
-        signupPassword: signupPassword
-    }
-    // console.log(data)
+        email: signupEmail,
+        name: username,  // Added name field
+        password: signupPassword,
+        dob: dob,
+        gender: gender,
+        mobile: mobile
+    };
     if (isVerified){
         var url = 'http://127.0.0.1:5000/signup_data';
         fetch(url, {
-            method: 'POST', // or 'PUT'
+            method: 'POST',
             headers:{
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data) // data can be `string` or {object}!
+            body: JSON.stringify(data)
         })
         .then(res => res.json())
-        .then(data => console.log('Success:', window.alert(JSON.stringify(data))))
-        .catch(error => console.error('Error:', error));
+        .then(data => {
+            if (data.status === 'success') {
+                window.alert('Account created successfully!');
+            } else {
+                window.alert('Failed to create account: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.alert('An error occurred during account creation.');
+        });
     }
 });
 
@@ -72,7 +92,7 @@ submitButton.addEventListener("click", function() {
     const data = {
         email: email,
         password: password
-    }
+    };
 
     if (isVerified) {
         var url = 'http://127.0.0.1:5000/login_data';
@@ -87,13 +107,15 @@ submitButton.addEventListener("click", function() {
         .then(data => {
             if (data.message !== 'Data not found!') {
                 console.log('Login successful.');
-                // Call the endpoint to run image_in_pdf
-                runImageInPDF();
+                window.location.replace("./quiz_html");
             } else {
                 window.alert("Login credentials don't match our database.");
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            window.alert('An error occurred during login.');
+        });
     }
 });
 
@@ -105,16 +127,12 @@ function runImageInPDF() {
     .then(data => {
         if (data.status === 'success') {
             window.alert('PDF created successfully');
-            window.location.replace("./quiz_html"); // Redirect after success
         } else {
             window.alert('Failed to create PDF');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        window.alert('An error occurred while creating PDF.');
+    });
 }
-
-
-// resetting a password
-// forgetBtn.addEventListener("click", function(){
-//     continue
-// });

@@ -1,4 +1,4 @@
-//selecting all required elements
+// Selecting all required elements
 const start_btn = document.querySelector(".start_btn button");
 const info_box = document.querySelector(".info_box");
 const exit_btn = info_box.querySelector(".buttons .quit");
@@ -11,19 +11,48 @@ const timeText = document.querySelector(".timer .time_left_txt");
 const timeCount = document.querySelector(".timer .timer_sec");
 const waitTxt = document.querySelector(".result_box .wait_text");
 const camOpen = document.querySelector(".camera");
+const next_btn = document.querySelector("footer .next_btn");
+const bottom_ques_counter = document.querySelector("footer .total_que");
 
-// if startQuiz button clicked
+let counter;
+let counterLine;
+let que_count = 0;
+let que_numb = 1;
+let userScore = 0;
+let timeValue = 15;
+let widthValue = 0;
+
+let tickIconTag = '<div class="icon tick"><i class="fas fa-check"></i></div>';
+let crossIconTag = '<div class="icon cross"><i class="fas fa-times"></i></div>';
+
+// If startQuiz button clicked
 start_btn.onclick = () => {
   info_box.classList.add("activeInfo"); //show info box
   camOpen;
 };
 
-// if exit quiz button clicked
+// Fullscreen mode when quiz starts
+function startQuiz() {
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { // Firefox
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { // IE/Edge
+    elem.msRequestFullscreen();
+  }
+  document.querySelector('.start_btn').style.display = 'none';
+  document.querySelector('.quiz_box').style.display = 'block';
+}
+
+// If exit quiz button clicked
 exit_btn.onclick = () => {
   location.replace("./quiz.html");
 };
 
-// if continue quiz button clicked
+// If continue quiz button clicked
 continue_btn.onclick = () => {
   info_box.classList.remove("activeInfo"); //hide info box
   quiz_box.classList.add("activeQuiz"); //show quiz
@@ -34,10 +63,32 @@ continue_btn.onclick = () => {
   // cameraStart();
 };
 
+// Detect window focus/blur events
+window.addEventListener('blur', () => {
+  logWindowSwitch();
+});
+
+window.addEventListener('focus', () => {
+  console.log('Window focused again.');
+});
+
+function logWindowSwitch() {
+  console.log('Window switched!');
+  // Save this response (you can change this to save to your backend)
+  fetch('/log_window_switch', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message: 'Window switched' }),
+  }).then(response => response.json())
+    .then(data => console.log(data));
+}
+
 function showQuetions(index) {
   const que_text = document.querySelector(".que_text");
 
-  // creating a new span and div tag for questions and option and passing the value using array
+  // Creating a new span and div tag for questions and option and passing the value using array
   let que_tag =
     "<span>" +
     questions[index].numb +
@@ -64,22 +115,11 @@ function showQuetions(index) {
 
   const option = option_list.querySelectorAll(".option");
 
-  //set on-click attribute to all available options
+  // Set on-click attribute to all available options
   for (i = 0; i < option.length; i++) {
     option[i].setAttribute("onclick", "optionSelected(this)");
   }
 }
-
-let counter;
-let counterLine;
-let que_count = 0;
-let que_numb = 1;
-let userScore = 0;
-let timeValue = 15;
-let widthValue = 0;
-
-let tickIconTag = '<div class="icon tick"><i class="fas fa-check"></i></div>';
-let crossIconTag = '<div class="icon cross"><i class="fas fa-times"></i></div>';
 
 function optionSelected(answer) {
   clearInterval(counter); //clear counter
@@ -136,10 +176,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
 });
 
-const next_btn = document.querySelector("footer .next_btn");
-const bottom_ques_counter = document.querySelector("footer .total_que");
-
-// if next ques button clicked
+// If next ques button clicked
 next_btn.onclick = () => {
   if (que_count < questions.length - 1) {
     //if question count is less than total questions
@@ -220,55 +257,43 @@ function showResult() {
   quiz_box.classList.remove("activeQuiz"); //hide quiz box
   result_box.classList.add("activeResult"); //show result box
   const scoreText = result_box.querySelector(".score_text");
+  console.log(scoreText)
 
   if (userScore > 3) {
-    let scoreTag =
-      "<span>Congrats! You got <p>" +
-      userScore +
-      "</p> out of <p>" +
-      questions.length +
-      "</p></span>";
-    scoreText.innerHTML = scoreTag;
+      let scoreTag =
+          "<span>Congrats! You got <p>" +
+          userScore +
+          "</p> out of <p>" +
+          questions.length +
+          "</p></span>";
+      scoreText.innerHTML = scoreTag;
   } else {
-    let scoreTag =
-      "<span>Nice, You got <p>" +
-      userScore +
-      "</p> out of <p>" +
-      questions.length +
-      "</p></span>";
-    scoreText.innerHTML = scoreTag;
+      let scoreTag =
+          "<span>Nice, You got <p>" +
+          userScore +
+          "</p> out of <p>" +
+          questions.length +
+          "</p></span>";
+      scoreText.innerHTML = scoreTag;
   }
-  // Wait for 10 seconds (10000 milliseconds) and then redirect to google.com
+
+  // Send the final score to the server
+  fetch('/submit_score', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          candidate_id: candidateId, // Replace with the actual candidate ID
+          score: userScore,
+          total_questions: questions.length
+      }),
+  }).then(response => response.json())
+    .then(data => console.log(data.message))
+    .catch(error => console.error('Error:', error));
+
+  // Wait for 10 seconds (10000 milliseconds) and then redirect to the home page
   setTimeout(function () {
-    window.location.href = "http://127.0.0.1:5000";
+      window.location.href = "http://127.0.0.1:5000/stop_camera";
   }, 10000);
 }
-
-function stopCameraAndServer() {
-    fetch('/stop_camera')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-            // Optionally, you can redirect to another page or display a message
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
-// Disable screenshot
-window.addEventListener("screenshotTaken", function (e) {
-  e.preventDefault();
-});
-
-// Disable screen recording
-window.addEventListener("beforeunload", function (e) {
-  var mediaRecorder = new MediaRecorder(stream);
-  mediaRecorder.ondataavailable = function (e) {
-    // Handle data
-  };
-  mediaRecorder.onstop = function () {
-    // Handle recording stop
-  };
-  mediaRecorder.stop();
-});

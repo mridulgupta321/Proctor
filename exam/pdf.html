@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Report - {{student_name}}</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid #ddd;
+        }
+        
+        .header-details {
+            font-size: 18px;
+        }
+        
+        .header-details p {
+            margin: 5px 0;
+        }
+        
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            color: #0056b3;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 26px;
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        p {
+            margin: 10px 0;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .table th {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .competency-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .competency-bar div {
+            height: 20px;
+        }
+        
+        .low { 
+            width: 14%; 
+            background-color: red; 
+        }
+        
+        .empty { 
+            width: 86%; 
+            background-color: #eee; 
+        }
+        
+        .overall-result {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: red;
+            margin-bottom: 40px;
+        }
+        
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        
+        .images img {
+            width: 120px;
+            height: 120px;
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .images img:hover {
+            transform: scale(1.05);
+            border-color: #0056b3;
+        }
+        
+        .preformatted {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .scale {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .scale-bar {
+            position: relative;
+            height: 30px;
+            background: linear-gradient(to right, #7AC142, #FFC72C, #FF6F43, #D32E2D);
+            width: 70%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .indicator {
+            position: absolute;
+            top: -10px;
+            height: 50px;
+            width: 2px;
+            background-color: black;
+            left: 10%;
+        }
+        
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .parameters {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .parameter {
+            text-align: center;
+            width: 13%;
+        }
+        
+        .parameter-bar {
+            width: 100%;
+            height: 150px;
+            background-color: #E0E0E0;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .parameter-bar .fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #008000;
+        }
+        
+        .parameter-label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .parameter-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .violation-info {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .violation-info strong {
+            font-size: 16px;
+        }
+        
+        /* Page Breaks */
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Candidate's Photo and Details -->
+        <div class="header">
+            <img src="candidate-photo.jpg" alt="Candidate Photo">
+            <div class="header-details">
+                <p><strong>Candidate Name:</strong> {{student_name}}</p>
+                <p><strong>Email:</strong> {{student_mail}}</p>
+                <p><strong>Assessed on:</strong> {{Assessment_date}}</p>
+            </div>
+        </div>
+
+        <!-- Report Title -->
+        <h1>Nippon Data Systems</h1>
+        <h2>CST™ and Technical Assessment Report</h2>
+
+        <!-- Overall Result -->
+        <div class="section overall-result">
+            <p>Overall Result: Low</p>
+        </div>
+
+        <!-- Competency Snapshot -->
+        <div class="section competency-snapshot">
+            <h2>Competency Snapshot</h2>
+            <div class="competency-bar">
+                <div class="low"></div>
+                <div class="empty"></div>
+            </div>
+            <p><strong>CST™ - L3:</strong> 14%</p>
+            <p><strong>CST™ - L4:</strong> 0%</p>
+            <p><strong>Technical:</strong> 25%</p>
+        </div>
+
+        <!-- Violation Scale -->
+        <div class="section violation-scale">
+            <h2>Violation Scale</h2>
+            <p>
+                It is an index designed to rate a candidate on fair and ethical attempt of an online assessment. 
+                This score is derived using <strong>EYE IN THE SKY™</strong>, proprietary malpractice detection technology, and also reports the window violations attempted by a candidate and total time spent by moving outside the test on a system or browser.
+            </p>
+            <div class="scale">
+                <div class="scale-bar">
+                    <div class="indicator" style="left: 10%;"></div>
+                </div>
+                <span>0.3</span>
+            </div>
+            <div class="scale-labels">
+                <span>0</span>
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+                <span>Unacceptable</span>
+            </div>
+            <p class="violation-time">Violation Window: 0 | Time: 00 min</p>
+            <div class="parameters">
+                <div class="parameter" id="parameter1">
+                    <div class="parameter-bar">
+                        <div class="fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="parameter-label">Window Switch</div>
+                    <div class="parameter-value">0.00</div>
+                </div>
+                <div class="parameter" id="parameter2">
+                    <div class="parameter-bar">
+                        <div class="fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="parameter-label">Multiple Face Detection</div>
+                    <div class="parameter-value">0.00</div>
+                </div>
+                <div class="parameter" id="parameter3">
+                    <div class="parameter-bar">
+                        <div class="fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="parameter-label">Multiple Login</div>
+                    <div class="parameter-value">0.00</div>
+                </div>
+                <div class="parameter" id="parameter4">
+                    <div class="parameter-bar">
+                        <div class="fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="parameter-label">Device</div>
+                    <div class="parameter-value">0.00</div>
+                </div>
+                <div class="parameter" id="parameter5">
+                    <div class="parameter-bar">
+                        <div class="fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="parameter-label">Answer Behavior</div>
+                    <div class="parameter-value">0.00</div>
+                </div>
+                <div class="parameter" id="parameter6">
+                    <div class="parameter-bar">
+                        <div class="fill" style="height: 0%;"></div>
+                    </div>
+                    <div class="parameter-label">Object Detection</div>
+                    <div class="parameter-value">0.00</div>
+                </div>
+                <div class="parameter" id="parameter7">
+                    <div class="parameter-bar">
+                        <div class="fill" style="height: 40%; background-color: #007300;"></div>
+                    </div>
+                    <div class="parameter-label">Face Recognition</div>
+                    <div class="parameter-value">0.40</div>
+                </div>
+            </div>
+            <div class="violation-info">
+                <strong>Low (0 - 1)</strong>
+                <p>
+                    A low violation rating indicates the likelihood that the candidate has attempted the assessment fairly without indulging in any malpractice. A malpractice would include incidences such as window switch, impersonation during the course of assessment, use of other devices, multiple logins, abrupt answering behavior, and seeking the help of another individual during the assessment.
+                </p>
+            </div>
+        </div>
+
+        <!-- Candidate Images -->
+        <div class="section images">
+            <h2>Candidate Images</h2>
+            {% for i in range(1, 11) %}
+                <img src="static/images/{{ i }}.jpg" alt="Image {{ i }}">
+            {% endfor %}
+        </div>
+
+        <!-- CST™ - L3 Section -->
+        <div class="section cst-l3">
+            <h2>CST™ - L3</h2>
+            <p><strong>Language:</strong> Java</p>
+            <p><strong>Question:</strong> Perfect String</p>
+            <p><strong>Response:</strong></p>
+            <div class="preformatted">
+                import java.io.*; <br>
+                import java.util.*; <br>
+                class SolutionClass <br>
+                { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;static int minOperation(String s, int n) { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int cnt1 = 0; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < n; i++) { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (s.charAt(i) == '1') <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cnt1++; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int cnt0 = 0; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < cnt1; i++) { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (s.charAt(i) == '0') { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cnt0++; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cnt0; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;} <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;public static void main (String[] args) throws java.lang.Exception { <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scanner sc = new Scanner(System.in); <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String s = sc.next(); <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int n = s.length(); <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(minOperation(s, n)); <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <br>
+                } <br>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -36,4 +36,3 @@ def mouthTrack(faces, frame):
         return -1
 
         # cv2.putText(frame, "Threshold - "+ str(30), (50,400), cv2.FONT_HERSHEY_PLAIN,2,(0,255,255),5)
-        

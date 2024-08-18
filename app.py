@@ -9,8 +9,6 @@ from eye_tracker import gazeDetection
 from head_pose_estimation import head_pose_detection 
 import winsound
 from datetime import datetime
-import audio_detection as process_audio_and_text
-
 
 global data_record
 data_record = []
@@ -43,8 +41,6 @@ def faceCount_detection(faceCount):
 
 #Main function 
 def proctoringAlgo():
-
-    process_audio_and_text()
     
     blinkCount = 0
 

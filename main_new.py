@@ -13,7 +13,6 @@ CORS(app)
 
 # Define a global variable to store the email
 global_email = None
-global_switch_window = 0
 
 """
 Code for the database backend server.
@@ -80,16 +79,16 @@ def stop_camera():
     stop_recording()
     
     print('Server stopping.....')
-
+    
     # Redirect to a specific route
-    return redirect(url_for('hello'))
+    return redirect(url_for('mic_off'))
 
-@app.route('/hello')
+@app.route('/mic_off')
 def hello():
     # Convert the recorded audio to text
     convert_audio_to_text()
-    return redirect(url_for('index_page'))
-
+    return redirect(url_for('login_data'))
+    
 @app.route('/fullscreen_check', methods=['POST'])
 def fullscreen_check():
     data = request.get_json()
@@ -108,7 +107,6 @@ def window_switch():
     user_response = data.get('response')
     question_number = data.get('question_number')
     
-    global_switch_window += 1
     # Save the response or handle it as needed
     print(user_response, question_number)
     
@@ -119,13 +117,33 @@ def submit_score():
     data = request.get_json()
     score = data.get('score')
     total_questions = data.get('total_questions')
-    print(data)
+    
     # Process and save the score in the database or perform any other logic
     save_score(global_email, score, total_questions)
-
+    
     return jsonify({'status': 'success', 'message': 'Score submitted successfully!'})
 
 # Main function
 if __name__ == "__main__":
     print("Starting the Python Flask Server.....")
     app.run(port=5000, debug=True)
+
+
+@app.route('/stop_camera')
+def stop_camera():
+    global running
+    running = False
+    main_app()    
+    stop_recording()
+    
+    print('Server stopping.....')
+    
+    # Redirect to a specific route
+    return redirect(url_for('hello'))
+
+@app.route('/hello')
+def hello():
+    # Convert the recorded audio to text
+    convert_audio_to_text()
+    os._exit(0) 
+    return

@@ -15,7 +15,6 @@ def midPoint(pointA, pointB):
 
     return (X,Y)
 
-
 def findDist(pointA, pointB):
 
     #calc Eucledian Norm of point A and B
